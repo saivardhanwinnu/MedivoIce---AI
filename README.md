@@ -1,53 +1,145 @@
-# MediVoice AI
+# MediVoice AI – Voice-Based Doctor Appointment Assistant
 
-A local, zero-budget voice-powered medical appointment assistant built with React, Vite, FastAPI, Pipecat, ElevenLabs, Gemini API, and SQLite.
+MediVoice AI is a local, voice-powered doctor appointment assistant that allows users to check doctor availability, book appointments, and cancel appointments through natural conversation.
 
-## Features (Planned)
+## Features
 
-- **Real-time Voice Call** in your browser (Start / End call controls)
-- **Live Conversation Transcript** showing both caller and assistant messages
-- **Doctors & Available Slots** view synced with SQLite
-- **Appointments List** updated live after booking or cancellation
-- **Phone Verification Rule:** The assistant asks for the caller's phone number, reads it back for confirmation, and only then books or cancels an appointment
+- Real-time browser-based voice conversations.
+- Live conversation transcript.
+- Doctor and available appointment slot listing.
+- Book appointments using voice commands.
+- Cancel existing appointments using voice commands.
+- Phone number verification: the assistant reads back the caller's spoken phone number and requests confirmation before booking or cancellation.
+- SQLite database for doctors, slots, and appointments.
+- Dashboard updates after booking and cancellation.
 
-## Tech Stack
+## Technology Stack
 
-- **Frontend:** React + Vite (`@pipecat-ai/client-js`, `@pipecat-ai/client-react`, `@pipecat-ai/small-webrtc-transport`)
-- **Backend:** Python FastAPI + Pipecat (`pipecat-ai`)
-- **Speech-to-Text (STT):** ElevenLabs (Free Tier)
-- **Text-to-Speech (TTS):** ElevenLabs (Free Tier)
-- **LLM:** Google Gemini API (Free Tier)
-- **Database:** SQLite (local file, zero setup)
+- **Frontend:** React, Vite
+- **Backend:** Python, FastAPI
+- **Voice Pipeline:** Pipecat
+- **Speech-to-Text:** ElevenLabs
+- **Text-to-Speech:** ElevenLabs
+- **LLM:** Google Gemini
+- **Database:** SQLite
+- **Communication:** WebRTC
 
 ## Project Structure
 
 ```text
 medvoice/
-├── .gitignore          # Protects .env, venv/, node_modules/, and *.db from Git
-├── README.md           # Project overview and setup instructions
-├── backend/            # FastAPI + Pipecat + SQLite backend
-│   └── .env.example    # Template for your local API keys
-└── frontend/           # React + Vite frontend
+├── backend/
+│   ├── bot.py
+│   ├── db.py
+│   ├── server.py
+│   ├── tools.py
+│   ├── requirements.txt
+│   └── .env.example
+├── frontend/
+│   ├── src/
+│   ├── package.json
+│   └── vite.config.js
+├── .gitignore
+└── README.md
 ```
 
 ## Prerequisites
 
-1. **Python 3.11 – 3.14**
-2. **Node.js (LTS) & npm**
-3. **Free API Keys:**
-   - Gemini API key from Google AI Studio
-   - ElevenLabs API key from ElevenLabs
+- Python 3.13 (or a compatible version)
+- Node.js and npm
+- Gemini API key
+- ElevenLabs API key
 
-## Security Reminder
+## Setup Instructions
 
-- Never put API keys inside `frontend/` files.
-- Never commit `backend/.env` to Git. Copy `backend/.env.example` to `backend/.env` when you are ready to run the backend.
+### 1. Clone the repository
 
-## Current Status
+```bash
+git clone https://github.com/saivardhanwinnu/MedivoIce---AI.git
+cd MedivoIce---AI
+```
 
-- [x] Step 1: Project root structure, `.gitignore`, `backend/.env.example`, and `README.md`
-- [ ] Step 2: SQLite database and seed data
-- [ ] Step 3: Voice assistant tools (`check_doctor_availability`, `book_appointment`, `cancel_appointment`)
-- [ ] Step 4: FastAPI server & Pipecat voice pipeline
-- [ ] Step 5: React + Vite frontend UI
-- [ ] Step 6: Local end-to-end verification
+### 2. Configure backend
+
+Create and activate a virtual environment:
+
+```powershell
+python -m venv backend/venv
+.\backend\venv\Scripts\activate
+```
+
+Install dependencies:
+
+```powershell
+pip install -r backend/requirements.txt
+```
+
+Copy the environment template:
+
+```powershell
+Copy-Item backend/.env.example backend/.env
+```
+
+Add your API keys to `backend/.env`. Never commit this file.
+
+### 3. Start the backend
+
+From the project root:
+
+```powershell
+python -m uvicorn server:app --app-dir backend --host 127.0.0.1 --port 8000
+```
+
+### 4. Start the frontend
+
+Open another terminal:
+
+```powershell
+cd frontend
+npm install
+npm run dev
+```
+
+Open the local URL displayed by Vite, usually:
+
+```text
+http://localhost:5173
+```
+
+## Voice Assistant Tools
+
+The assistant uses three backend tools:
+
+1. `check_doctor_availability` – checks doctors and available appointment slots.
+2. `book_appointment` – books an appointment after phone number confirmation.
+3. `cancel_appointment` – cancels an appointment after phone number confirmation and ownership verification.
+
+## Testing
+
+Run backend unit tests from the project root:
+
+```powershell
+python -m unittest discover -s backend -p "test_*.py" -v
+```
+
+The booking and cancellation workflows have been tested locally, including phone confirmation and appointment slot updates.
+
+## Security
+
+- API keys are stored in the local backend `.env` file.
+- The `.env` file is excluded from Git using `.gitignore`.
+- The `.env.example` file contains configuration placeholders only.
+- Caller phone numbers are used for appointment ownership verification.
+
+## Limitations
+
+- This project uses mock doctor and appointment data stored locally in SQLite.
+- It is a demonstration project, not a production medical service.
+- API usage depends on the free-tier limits and availability of Gemini and ElevenLabs.
+- The application is designed for local execution and does not require paid hosting.
+
+## Author
+
+**Chindam Sai Vardhan**
+
+GitHub: https://github.com/saivardhanwinnu
